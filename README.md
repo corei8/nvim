@@ -304,7 +304,7 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Clean'     :'✔︎',
                 \ 'Unknown'   :'?',
                 \ }
-let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='onedark'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
