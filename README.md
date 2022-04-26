@@ -1,6 +1,6 @@
 # neovim-config
 
-```vimscript
+```vim
 " corei8.github@gmail.com neovim configuration
 
 " tabs
@@ -68,15 +68,7 @@ Plug 'dracula/vim'
 " comments
 Plug 'jbgutierrez/vim-better-comments'
 
-" Plug 'sheerun/vim-polyglot'
-" Plug 'mattn/emmet-vim'
-" Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-" Plug 'dense-analysis/ale'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'preservim/tagbar'
-" Plug 'junegunn/fzf' | Plug 'junegunn/fzf.vim'
-" Plug 'SirVer/ultisnips'
 
 " Better Visual Guide
 Plug 'Yggdroot/indentLine'
@@ -86,12 +78,6 @@ Plug 'w0rp/ale'
 
 " Autocomplete
 Plug 'valloric/youcompleteme'
-"Plug 'aca/completion-tabnine', { 'do': './install.sh' }
-"Plug 'ncm2/ncm2'
-"Plug 'roxma/nvim-yarp'
-"Plug 'ncm2/ncm2-bufword'
-"Plug 'ncm2/ncm2-path'
-"Plug 'ncm2/ncm2-jedi'
 
 " Formater
 Plug 'Chiel92/vim-autoformat'
@@ -106,8 +92,6 @@ highlight Normal guibg=none
 let g:onedark_italic=1
 colorscheme onedark
 set background=dark
-" colorscheme = 'dracula'
-" colorscheme_bg = 'dark'
 hi Normal guibg=NONE ctermbg=NONE
 let g:terminal_ansi_colors = [
     \ '#282828', '#cc241d', '#98971a', '#d79921',
@@ -117,7 +101,6 @@ let g:terminal_ansi_colors = [
 \]
 
 let mapleader = " "
-" nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
 
 " easier way to choose buffers:
 nnoremap <leader>b :b<CR>
@@ -135,8 +118,6 @@ let g:NERDTreeGitStatusUseNerdFonts = 1
 " open NerdTree on startup
 " Start NERDTree and leave the cursor in it.
 autocmd VimEnter * NERDTree
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists(“s:std_in”) | NERDTree | endif
 " open NerdTree on the current file
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
 " close NerdTree upon opening a file
@@ -144,7 +125,6 @@ let NERDTreeQuitOnOpen = 1
 " close tab if the only remaining window is NerdTree
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-" autocmd bufenter * if (winnr(“$”) == 1 && exists(“b:NERDTreeType”) && b:NERDTreeType == “primary”) | q | endif
 " delete buffer of deleted file in NerdTree
 let NERDTreeAutoDeleteBuffer = 2
 " some stuff for looks
@@ -164,9 +144,6 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Clean'     :'✔︎',
                 \ 'Unknown'   :'?',
                 \ }
-
-" Fern.vim
-" nmap <leader>n :Fern . -drawer -toggle<CR>
 
 " AirLine
 let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
@@ -209,9 +186,6 @@ let g:ale_linters = {'python': ['flake8']}
 " Autocomplete for ncm2
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Plenary
-" local async = require "plenary.async
 
 " Telescope
 " Find files using Telescope command-line sugar.
