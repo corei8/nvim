@@ -5,12 +5,10 @@
 ```vim
 " corei8.github@gmail.com neovim configuration
 
-" tabs
 set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
 set smartindent
-
 set exrc
 set guicursor=i:block
 set nu
@@ -19,74 +17,48 @@ set nohlsearch
 set hidden
 set noerrorbells
 set nowrap
-
-" file history
 set noswapfile
 set nobackup
 set undofile
-
-" search
 set incsearch
-
-" gui
 set termguicolors
 set scrolloff=8
 set noshowmode
 set colorcolumn=79
 set signcolumn=yes
-
-" clipboard
 set clipboard=unnamedplus
-
 set completeopt=menuone,noinsert,noselect
 
-call plug#begin('~/.vim/plugged')
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" File managing
+call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-
-" Git
 Plug 'tpope/vim-fugitive'
-
-" UI
 Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-" telescope 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-lua/plenary.nvim'
-
-" Commenting
 Plug 'scrooloose/nerdcommenter'
-
-" colorscheme
 Plug 'gruvbox-community/gruvbox'
 Plug 'joshdick/onedark.vim'
-Plug 'dracula/vim'
-
-" comments
 Plug 'jbgutierrez/vim-better-comments'
-
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-surround'
-
-" Better Visual Guide
 Plug 'Yggdroot/indentLine'
-
-" syntax check
 Plug 'w0rp/ale'
-
 " Autocomplete
-Plug 'valloric/youcompleteme'
-
-" Formater
+"function! BuildYCM(info)
+    "if a:info.status == 'installed' || a:info.force
+    "!./install.py
+  "endif
+"endfunction
+"Plug 'valloric/youcompleteme', { 'do': function('BuildYCM') }
+"Plug 'aca/completion-tabnine', { 'do': './install.sh' }
 Plug 'Chiel92/vim-autoformat'
-
-" Project Management
 Plug 'ahmedkhalf/project.nvim'
-
 call plug#end()
 
 set termguicolors
@@ -104,9 +76,6 @@ let g:terminal_ansi_colors = [
 
 let mapleader = " "
 
-" easier way to choose buffers:
-nnoremap <leader>b :b<CR>
-
 " Vim Fugitive
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //3<CR>
@@ -114,26 +83,17 @@ nmap <leader>gs :G<CR>
 
 " NerdTree
 nnoremap <leader>n :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
-let NERDTreeRespectWildIgnore=1
-let g:NERDTreeGitStatusUseNerdFonts = 1
-" open NerdTree on startup
-" Start NERDTree and leave the cursor in it.
-autocmd VimEnter * NERDTree
-" open NerdTree on the current file
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-" close NerdTree upon opening a file
-let NERDTreeQuitOnOpen = 1
-" close tab if the only remaining window is NerdTree
-" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd VimEnter * NERDTree
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-" delete buffer of deleted file in NerdTree
+let NERDTreeRespectWildIgnore=1
+let NERDTreeShowHidden=1
+let g:NERDTreeGitStatusUseNerdFonts = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 2
-" some stuff for looks
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-
-" NerdTree git plugin icon adjustment
 let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Modified'  :'✹',
                 \ 'Staged'    :'✚',
@@ -148,12 +108,13 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ }
 
 " AirLine
-let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+" Note that I have added spaces to some of the symbols
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_theme='onedark'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-" powerline symbols
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
@@ -185,17 +146,13 @@ let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {'python': ['flake8']}
 
-" Autocomplete for ncm2
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
 " Telescope
-" Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+" Project.vim
 lua << EOF
   require("project_nvim").setup {
     patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json" },
@@ -203,7 +160,10 @@ lua << EOF
  }
 EOF
 
-" Commands for vim-plug:
+" Use homebrew's clangd
+"let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+
+"! Commands for vim-plug:
 " PlugInstall
 " PlugUpdate
 " PlugStatus
@@ -216,7 +176,6 @@ EOF
 
 ```vim
 " corei8.github@gmail.com neovim configuration
-
 set tabstop=4 softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -240,7 +199,7 @@ set colorcolumn=79
 set signcolumn=yes
 set clipboard=unnamedplus
 set completeopt=menuone,noinsert,noselect
-
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'ryanoasis/vim-devicons'
@@ -254,16 +213,14 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'gruvbox-community/gruvbox'
 Plug 'joshdick/onedark.vim'
-Plug 'dracula/vim'
 Plug 'jbgutierrez/vim-better-comments'
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-surround'
 Plug 'Yggdroot/indentLine'
 Plug 'w0rp/ale'
-Plug 'valloric/youcompleteme'
 Plug 'Chiel92/vim-autoformat'
 Plug 'ahmedkhalf/project.nvim'
 call plug#end()
-
 set termguicolors
 highlight Normal guibg=none
 let g:onedark_italic=1
@@ -277,18 +234,18 @@ let g:terminal_ansi_colors = [
     \ '#83a598', '#d3869b', '#8ec07c', '#ebdbb2',
 \]
 let mapleader = " "
-nnoremap <leader>b :b<CR>
 nmap <leader>gh :diffget //3<CR>
 nmap <leader>gu :diffget //3<CR>
 nmap <leader>gs :G<CR>
 nnoremap <leader>n :NERDTreeToggle<CR>
-let NERDTreeShowHidden=1
-let NERDTreeRespectWildIgnore=1
-let g:NERDTreeGitStatusUseNerdFonts = 1
-autocmd VimEnter * NERDTree
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-let NERDTreeQuitOnOpen = 1
+autocmd VimEnter * NERDTree
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+let NERDTreeRespectWildIgnore=1
+let NERDTreeShowHidden=1
+let g:NERDTreeGitStatusUseNerdFonts = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 2
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
@@ -305,6 +262,7 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Unknown'   :'?',
                 \ }
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_theme='onedark'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
@@ -332,8 +290,6 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {'python': ['flake8']}
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -344,5 +300,4 @@ lua << EOF
     show_hidden = false,
  }
 EOF
-
 ```
