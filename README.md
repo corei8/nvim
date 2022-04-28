@@ -1,5 +1,7 @@
 # neovim-config
 
+[Download init.vim](https://github.com/corei8/neovim-config/blob/main/init.vim)
+
 ```vim
 " corei8.github@gmail.com neovim configuration
 
